@@ -19,25 +19,26 @@ class Roles(db.Model):
     name = db.Column(db.String(100), nullable=False)
     users = db.relationship('User', backref='user', lazy=True, cascade="all, delete-orphan")
 
-class Cart(db.Model):
-    __tablename__ = "cart"
-    id = db.Column(db.Integer, primary_key=True)
-    products = db.Column(db.Integer, db.ForeignKey("products.id"),nullable=False)
-    orders = db.Column(db.Integer, db.ForeignKey("orders.id"),nullable=False)
-    product_quantity = db.Column(db.Integer)
-    product_price = db.Column(db.Float)
 
+
+cart = db.Table('cart',
+    db.Column("id",db.Integer,primary_key=True),
+    db.Column('products', db.Integer, db.ForeignKey('products.id')),
+    db.Column('orders', db.Integer, db.ForeignKey('orders.id')),
+    db.Column('product_quantity', db.Integer),
+    db.Column('product_price', db.Float)
+)
 
 class Products(db.Model):
     __tablename__ = 'products'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     price = db.Column(db.Float, nullable=False)
-    orders = db.relationship("Order",secondary=Cart,backref= db.backref('products', lazy='dynamic'))
+    orders = db.relationship("Order",secondary=cart,back_populates="cart")
 
 class Order(db.Model):
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'),nullable=False)
-    cart = db.relationship("Products",secondary=Cart,backref = db.backref('orders', lazy='dynamic'))
+    cart = db.relationship("Products",secondary=cart,back_populates="orders")
     date = db.Column(db.DateTime)

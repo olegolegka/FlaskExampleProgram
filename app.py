@@ -1,4 +1,4 @@
-from flask import Flask,render_template, url_for, request,redirect,flash,get_flashed_messages
+from flask import Flask,render_template, url_for, request,redirect,flash,get_flashed_messages,session
 from models import db, User
 from werkzeug.security import generate_password_hash,check_password_hash
 import os
@@ -19,6 +19,7 @@ mail = Mail(app)
 @app.route("/index/")
 @app.route('/')
 def index():
+    session["cart"] = []
     return render_template('index.html')
 
 

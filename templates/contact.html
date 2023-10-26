@@ -5,26 +5,18 @@
 </head>
 <body>
 
-
-
-<form action="/login" method="post">
-
+<div id="bg"></div>
+<form action="/contact" method="post">
 <div class="form-field">
-<input type="email" name="email" placeholder="Email / Username" required="">
+<input type="text" name="email" placeholder="Введите email" required="">
 </div>
 <div class="form-field">
-<input type="password" name="password" placeholder="Password" required=""> </div>
-    <div class="form-field">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        {% for message in messages %}
-        <h3> {{ message }} </h3>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
-    </div>
+<input type="text" name="phone" placeholder="Введите телефон" required="">
+</div>
 <div class="form-field">
-<button class="btn" type="submit">Log in</button>
+<input type="text" name="message" placeholder="Введите сообщение" required=""> </div>
+<div class="form-field">
+<button class="btn" type="submit">Свяжитесь со мной</button>
 </div>
 </form>
 

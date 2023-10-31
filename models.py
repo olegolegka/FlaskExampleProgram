@@ -22,11 +22,8 @@ class Roles(db.Model):
 
 
 cart = db.Table('cart',
-    db.Column("id",db.Integer,primary_key=True),
     db.Column('products', db.Integer, db.ForeignKey('products.id')),
     db.Column('orders', db.Integer, db.ForeignKey('orders.id')),
-    db.Column('product_quantity', db.Integer),
-    db.Column('product_price', db.Float)
 )
 
 class Products(db.Model):

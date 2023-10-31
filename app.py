@@ -29,7 +29,7 @@ def load_user(user_id):
 def index():
     session.clear()
     session.modified = True
-    session["Cart"] = {}
+    session["Cart"] = {"items":{},"total": 0}
     print(session)
     return render_template('index.html')
 
@@ -117,18 +117,34 @@ def show_item(product_id: int):
 def add_to_cart(product_id:int):
     if request.method == 'POST':
         if "Cart" in session:  # Проверяем на то есть ли корзина в сессии
-            if not str(product_id) in session["Cart"]:  # проверяем на то есть ли имя в корзине, если нет, то добавляем в корзину словарь с ключом "имя"
-                session["Cart"][str(product_id)] = {"product": product_id, "qty": 1}
+            if not str(product_id) in session["Cart"]["items"]:  # проверяем на то есть ли имя в корзине, если нет, то добавляем в корзину словарь с ключом "имя"
+                session["Cart"]["items"][str(product_id)] = {"product": product_id, "qty": 1}
                 session.modified = True  # Если корзина - это список или словарь, то нужно каждый раз когда мы его обновляем ставить флаг True
             else:  # если имя уже в сессии то увеличиваем количество "товара"
-                session["Cart"][str(product_id)]["qty"] += 1
+                session["Cart"]["items"][str(product_id)]["qty"] += 1
                 session.modified = True
         return session["Cart"]
 
 @app.route("/cart")
 def cart():
     """Функция для отображения корзины"""
-    return render_template("cart.html",cart=session["Cart"])
+    if "Cart" in session:
+        session["Cart"]["total"] = 0
+        for product_id in session["Cart"]["items"]:
+            product = Products.query.filter(Products.id == product_id).first()
+            session["Cart"]["items"][product_id] = {"item": product.name,
+                                                    "qty": session["Cart"]["items"][product_id]["qty"],
+                                                    "price": product.price*session["Cart"]["items"][product_id]["qty"]}
+            session.modified = True
+            session["Cart"]["total"] += session["Cart"]["items"][product_id]["price"]
+        return render_template("cart.html",cart=session["Cart"])
+
+@app.route("/remove_item/<int:product_id>")
+def remove_from_cart(product_id:int):
+    item = session["Cart"]["items"].pop(str(product_id))
+    session["Cart"]["total"] -= item["price"]
+    session.modified = True
+    return redirect("/cart")
 
 @app.route('/cookies')
 def cookies():

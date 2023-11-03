@@ -10,21 +10,12 @@
 	</head>
 
 	<body>
-		
-		<nav class="navbar">
-			<div class="container">
-				<a class="navbar-brand" href="#">Your online store</a>
-				<div class="navbar-right">
-					<div class="container minicart"></div>
-				</div>
-			</div>
-		</nav>
-		
+
+
 		<div class="container-fluid breadcrumbBox text-center">
 			<ol class="breadcrumb">
-				<li><a href="#">Review</a></li>
-				<li class="active"><a href="#">Order</a></li>
-				<li><a href="#">Payment</a></li>
+				<li><a href="{{ url_for('index') }}">Главная</a></li>
+				<li class="active"><a href="#">Заказ</a></li>
 			</ol>
 		</div>
 		
@@ -41,22 +32,22 @@
 			<div class="col-md-7 col-sm-12 text-left">
 				<ul>
 					<li class="row list-inline columnCaptions">
-						<span>QTY</span>
-						<span>ITEM</span>
-						<span>Price</span>
+						<span>Количество</span>
+						<span>Товар</span>
+						<span>Цена</span>
 					</li>
 					{% for product_id in cart["items"] %}
 					<li class="row">
 						<span class="quantity">{{ cart["items"][product_id]["qty"] }}</span>
 						<span class="itemName">{{ cart["items"][product_id]["item"] }}</span>
 						<span class="price">$ {{ cart["items"][product_id]["price"] }}</span>
-						<a href="remove_item/{{ product_id }}"><span class="glyphicon glyphicon-remove"></span></a>
+						<a href="{{ url_for('remove_from_cart', product_id = product_id) }}"><span class="glyphicon glyphicon-remove"></span></a>
 					</li>
 					{% endfor %}
 					<li class="row totals">
-						<span class="itemName">Total:</span>
+						<span class="itemName">Итого:</span>
 						<span class="price">${{ cart["total"] }}</span>
-						<span class="order"> <a class="text-center">ORDER</a></span>
+						<span class="order"> <a class="text-center" href="{{ url_for('make_order') }}">Заказать</a></span>
 					</li>
 				</ul>
 			</div>

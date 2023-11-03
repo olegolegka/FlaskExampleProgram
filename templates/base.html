@@ -22,17 +22,30 @@
               </a>
             </li>
             <li>
-              {% if current_user.is_authenticated %}
+              <a href="{{ url_for('catalog') }}" class="nav-link text-white">
+                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#people-circle"></use></svg>
+                Catalog
+              </a>
+            </li>
+            {% if current_user.is_authenticated %}
+            <li>
+              <a href="{{ url_for('cart') }}" class="nav-link text-white">
+                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#table"></use></svg>
+                Cart
+              </a>
+              </li>
+            <li>
               <a href="{{ url_for('logout') }}" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#table"></use></svg>
                 logout
               </a>
+              </li>
               {% else %}
+            <li>
               <a href="{{ url_for('login') }}" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#table"></use></svg>
                 Sign in
               </a>
-              {% endif %}
             </li>
             <li>
               <a href="{{ url_for('signup') }}" class="nav-link text-white">
@@ -40,12 +53,8 @@
                 Sign Up
               </a>
             </li>
-            <li>
-              <a href="{{ url_for('catalog') }}" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#people-circle"></use></svg>
-                Catalog
-              </a>
-            </li>
+            {% endif %}
+
           </ul>
         </div>
       </div>

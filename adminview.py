@@ -1,8 +1,8 @@
 import flask_admin as fladmin
 import flask_login as login
-from flask import redirect,url_for
+from flask import redirect, url_for
 from flask_admin import helpers, expose
-from models import User,Order
+from models import User, Order
 from flask_admin.contrib.sqla import ModelView
 
 
@@ -17,11 +17,11 @@ class MyAdminIndexView(fladmin.AdminIndexView):
         Authorization for '/admin' panel
         :return: redirect to '/login' if user not logged in or his role not Admin
         """
-        if not login.current_user.is_authenticated: # если пользователь не авторизован то сразу переадресовываем на логин
+        if not login.current_user.is_authenticated:  # если пользователь не авторизован то сразу переадресовываем на логин
             return redirect(url_for('login'))
         else:
             admin = User.query.filter(User.id == login.current_user.get_id()).first()
-            if admin.role == 1: # проверяем роль текущего пользователя, если она админ отдаем страницу
+            if admin.role == 1:  # проверяем роль текущего пользователя, если она админ отдаем страницу
                 return super(MyAdminIndexView, self).index()
             return redirect(url_for('login'))
 
@@ -51,9 +51,9 @@ class OrderView(MyModelView):
     View for '/admin/order'
     """
 
-    column_list = ("id","user_id","date","cart","total") # переопределение колонок таблицы
-    column_searchable_list = ["date"] # делаем колонку date доступной для поиска
-    column_sortable_list = ["date"] # делаем колонку date сортируемой
+    column_list = ("id", "user_id", "date", "cart", "total")  # переопределение колонок таблицы
+    column_searchable_list = ["date"]  # делаем колонку date доступной для поиска
+    column_sortable_list = ["date"]  # делаем колонку date сортируемой
 
 
 class ProductsView(MyModelView):
@@ -61,9 +61,6 @@ class ProductsView(MyModelView):
     View for '/admin/products'
     """
 
-    column_list = ("id","name","price","orders") # переопределение колонок таблицы
-    column_searchable_list = ["name","price"] # делаем колонки name и price доступной для поиска
-    column_sortable_list = ["name"] # делаем колонку name сортируемой
-
-
-
+    column_list = ("id", "name", "price", "orders")  # переопределение колонок таблицы
+    column_searchable_list = ["name", "price"]  # делаем колонки name и price доступной для поиска
+    column_sortable_list = ["name"]  # делаем колонку name сортируемой

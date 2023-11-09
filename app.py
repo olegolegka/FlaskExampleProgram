@@ -19,14 +19,11 @@ app.secret_key = "123123412341234asdasd"  # задаем секретный кл
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://alek:123654@localhost/test_db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # отключаем автоматическое отслеживание изменений в метаданных
 
-app.config[
-    'MAIL_SERVER'] = "smtp.gmail.com"  # указываем адрес smtp сервера(берется из инструкции по настройке smtp например гугла или майла)
+app.config['MAIL_SERVER'] = "smtp.gmail.com"  # указываем адрес smtp сервера(берется из инструкции по настройке smtp например гугла или майла)
 app.config['MAIL_PORT'] = 587  # указываем порт для smtp
 app.config['MAIL_USE_TLS'] = True  # указываем что будем использовать TLS
-app.config['MAIL_USERNAME'] = os.environ.get(
-    'mail')  # здесь прописываем логин от почты с которой будем отправлять письма
-app.config['MAIL_PASSWORD'] = os.environ.get(
-    'password')  # здесь прописываем токен который получаем при регистрации нашего приложения в почтовом клиенте
+app.config['MAIL_USERNAME'] = os.environ.get('mail')  # здесь прописываем логин от почты с которой будем отправлять письма
+app.config['MAIL_PASSWORD'] = os.environ.get('password')  # здесь прописываем токен который получаем при регистрации нашего приложения в почтовом клиенте
 app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('mail')  # устанавливаем отправителя по умолчанию == username
 
 app.config['FLASK_ADMIN_SWATCH'] = 'simplex'  # устанавливаем тему админки(можно выбрать тут https://bootswatch.com/3/)

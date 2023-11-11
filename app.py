@@ -43,7 +43,7 @@ admin.add_view(MyModelView(User, db.session))  # добавляем ModelView д
 admin.add_view(ProductsView(Products, db.session))  # ModelView для вкладки Products(Из файла adminview.py)
 admin.add_view(OrderView(Order, db.session))  # ModelView для вкладки Order(Из файла adminview.py)
 
-app.register_blueprint(api_bp, url_prefix="/api")
+app.register_blueprint(api_bp, url_prefix="/api")# регистрируем blueprint api в нашем приложении
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -234,6 +234,7 @@ def add_to_cart(product_id: int):
                 session["Cart"]["items"][str(product_id)]["qty"] += 1
                 session.modified = True
         return redirect("/catalog")
+    return redirect("/catalog")
 
 
 @app.route("/cart")
@@ -249,12 +250,9 @@ def cart():
             product = Products.query.filter(Products.id == product_id).first()  # получаем объект товара из бд по id
             session["Cart"]["items"][product_id] = {"item": product.name,
                                                     "qty": session["Cart"]["items"][product_id]["qty"],
-                                                    "price": product.price * session["Cart"]["items"][product_id]
-                                                    [
-                                                        "qty"]}  # формируем заново корзину считая стоимость каждого товара по количеству
+                                                    "price": product.price * session["Cart"]["items"][product_id]["qty"]}  # формируем заново корзину считая стоимость каждого товара по количеству
             session.modified = True  # указываем session что мы поменяли значение словаря(сам не обновится)
-            session["Cart"]["total"] += session["Cart"]["items"][product_id][
-                "price"]  # добавляем к общей стоимости заказа стоимость товара*количество
+            session["Cart"]["total"] += session["Cart"]["items"][product_id]["price"]  # добавляем к общей стоимости заказа стоимость товара*количество
         return render_template("cart.html", cart=session["Cart"])  # отдаем страницу cart.html с товарами в словаре cart
 
 
@@ -266,8 +264,7 @@ def remove_from_cart():
     """
     product_id = request.args.get("product_id")  # из аргументов запроса получаем id продукта
     item = session["Cart"]["items"].pop(str(product_id))  # удаляем ключ с id продукта из сессии
-    session["Cart"]["total"] -= item[
-        "price"]  # отнимаем от общей стоимости(бесполезное действие в данном случае, так как на /cart мы все равно пересчитаем, просто как пример того как можно сделать пересчет)
+    session["Cart"]["total"] -= item["price"]  # отнимаем от общей стоимости(бесполезное действие в данном случае, так как на /cart мы все равно пересчитаем, просто как пример того как можно сделать пересчет)
     session.modified = True  # указываем на то что поменяли словарь в сессии(сам не обновится)
     return redirect("/cart")  # перенаправляем на корзину
 
@@ -285,11 +282,9 @@ def make_order():
         if current_user.is_authenticated:  # проверяем авторизовался ли пользователь
             new_order = Order(user_id=current_user.get_id(),
                               date=datetime.now(),
-                              total=session["Cart"][
-                                  "total"])  # создаем объект заказа с текущей датой и стоимостью из сессии
+                              total=session["Cart"]["total"])  # создаем объект заказа с текущей датой и стоимостью из сессии
             for product_id in session["Cart"]["items"]:  # проходимся по id продуктов в сессии
-                for i in range(session["Cart"]["items"][product_id][
-                                   "qty"]):  # формируем range(количество товара в корзине) чтобы добавить несколько одинаковых товаров в заказ
+                for i in range(session["Cart"]["items"][product_id]["qty"]):  # формируем range(количество товара в корзине) чтобы добавить несколько одинаковых товаров в заказ
                     product = Products.query.filter(Products.id == product_id).first()  # получаем объект товара из бд
                     new_order.cart.append(product)  # добавляем в список cart модели Order объект товара
             db.session.add(new_order)  # добавляем заказ в метаданные

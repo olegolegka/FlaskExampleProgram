@@ -64,6 +64,7 @@ def auth():
     Принимает от клиента email и password из json
     :return: json с токеном или 405 статус код если обратились по методу GET
     """
+
     if request.method == "POST":
         email = request.json.get("email")  # получаем email пользователя из json
         password = request.json.get("password")  # получаем password пользователя из json
@@ -71,3 +72,6 @@ def auth():
         token = jwt.encode(dict(email=email, password=password, exp=exp), current_app.secret_key, algorithm="HS256")  # генерируем токен, передаем нагрузку, секретный ключ и метод
         return {"status": "token generated successfully", "token": token}
     return abort(405)
+
+
+

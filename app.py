@@ -198,6 +198,8 @@ def catalog():
     :return: страницу catalog.html со списком товаров
     """
     products = Products.query.all()  # Получаем все товары из бд(соответствует select * from products)
+    print(products)
+    print(db.session.query(Products).filter(Products.id == 1).first())
     return render_template('catalog.html',
                            products=products)  # отдаем страницу catalog.html, товары лежат в списке products
 
